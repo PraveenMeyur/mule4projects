@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="dataweave-demoFlow" doc:id="ad9dc5a8-aae5-4936-a9db-b2964e770b45" >
+		<ee:transform doc:name="Transform Message json java json" doc:id="25f1a6c5-e178-4556-9d5e-7a368ba3f651" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	empID: payload.empID,
+	empName: payload.empName,
+	empEmail: payload.empEmail,
+	empStatus: payload.empStatus
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message json to xml" doc:id="76a547d1-3a85-4c28-995d-585012937ef4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+emp: {
+	empID: payload.empID,
+	empName: payload.empName,
+	empEmail: payload.empEmail,
+	empStatus: payload.empStatus
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message json to csv" doc:id="5c6084ef-6e1e-4472-8408-7d4eed7d4a4d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+---
+{
+	empID: payload.empID,
+	empName: payload.empName,
+	empEmail: payload.empEmail,
+	empStatus: payload.empStatus
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow1" doc:id="30ee5697-643e-484c-8e79-7d8413c94f46" >
+		<ee:transform doc:name="Transform Message attribute xml to json" doc:id="009ea1b8-d1ec-452f-9f05-44ecb956a35b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	item: {
+		price: payload.book.price,
+		properties: {
+			title: payload.book.title,
+			author: payload.book.author,
+			year: payload.book.year,
+			lungage: payload.book.title.@lang
+		}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow2" doc:id="829878d5-b354-40f3-8660-1d8d4e0b4f17" >
+		<ee:transform doc:name="Transform Message json to attribute xml" doc:id="161970a7-60d0-4f78-9df6-3efb0478b2f6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+	book: {
+		title @(lang: payload.item.properties.lungage): payload.item.properties.title,
+		year: payload.item.properties.year,
+		price: payload.item.price,
+		author @(loc: "US"): payload.item.properties.author[0]
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow3" doc:id="4d31a93e-8dfe-48a6-b053-b0a0110f1231" >
+		<ee:transform doc:name="Transform Message json to csv" doc:id="1f8d07e0-970a-4ffc-a580-1187f85adbc9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv headerLineNumber = 0, header = true
+---
+[{
+	empID: payload.empID as String,
+	empName: payload.empName,
+	empEmail: payload.empEmail,
+	empStatus: payload.empStatus
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow4" doc:id="359e7066-472d-4e15-9615-2196e4e89eda" >
+		<ee:transform doc:name="Transform Message xlsx to xml" doc:id="41de0e1c-9982-4e25-a2e2-f1190360626f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+	emp: {
+		empID: payload.employee.empID default 0,
+		empName: payload.employee.empName default "",
+		empEmail: payload.employee.empEmail default "",
+		empStatus: payload.employee.empStatus default ""
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

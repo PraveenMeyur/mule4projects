@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="466ff548-9c7e-4b17-9d7a-9695f117e703" basePath="mule-message-structure-demo" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="read-json-demoFlow" doc:id="49e5081d-1aa9-4bb5-b9ee-e2631b45e751" >
+		<http:listener doc:name="Listener" doc:id="ca5bd44a-683d-4db6-9e8d-f6f994669bd9" config-ref="HTTP_Listener_config" path="read-json" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Logger" doc:id="67956a4f-6b76-4f32-a48a-3941fef4e1ba" message="#[payload.employeeID]"/>
+	</flow>
+</mule>
